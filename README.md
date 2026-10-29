@@ -3,11 +3,13 @@
 [![Tests](https://github.com/mtakuski/sqlfuse/actions/workflows/tests.yml/badge.svg)](https://github.com/mtakuski/sqlfuse/actions/workflows/tests.yml)
 ![Coverage](https://raw.githubusercontent.com/mtakuski/sqlfuse/badges/coverage.svg)
 ![Last commit](https://img.shields.io/github/last-commit/mtakuski/sqlfuse)
+![Issues](https://img.shields.io/github/issues/mtakuski/sqlfuse)
+![Repo size](https://img.shields.io/github/repo-size/mtakuski/sqlfuse)
 
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![License](https://img.shields.io/github/license/mtakuski/sqlfuse)
 ![Pydantic v2](https://img.shields.io/badge/pydantic-v2-E92063)
-	![SQLAlchemy 2](https://img.shields.io/badge/SQLAlchemy-2.x-D71F00)
+![SQLAlchemy 2](https://img.shields.io/badge/SQLAlchemy-2.x-D71F00)
 
 # SQLFuse
 
@@ -59,6 +61,7 @@ SQLFuse is an early release (version 0.1.0). The core features are covered by an
 - SQLFuse relies on some internal Pydantic APIs, so major Pydantic upgrades may require an update.
 
 ## Contributing
+![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 
 Contributions are welcome. Please open an issue to discuss bugs or ideas before submitting a pull request, and make sure the test suite passes.
 

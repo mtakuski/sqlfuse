@@ -48,3 +48,61 @@ def test_sync_schema_adds_missing_tables_and_columns(tmp_path):
     assert "CREATE TABLE hero" in applied
     assert sync_schema(engine) == []
     engine.dispose()
+
+
+def test_migrator_extras(tmp_path, monkeypatch, capsys):
+    import pytest
+    from sqlfuse.migrations import main
+
+    monkeypatch.chdir(tmp_path)
+    url = f"sqlite:///{tmp_path}/c.db"
+    args = ["--url", url, "--models", "tests.models", "--dir", str(tmp_path / "mig")]
+    main(args + ["init"])
+    main(args + ["init"])                                   # idempotent
+    main(args + ["revision", "-m", "first"])
+    main(args + ["revision", "-m", "empty", "--empty"])
+    main(args + ["upgrade"])
+    main(args + ["current"])
+    assert capsys.readouterr().out.strip().splitlines()[-1] != "None"
+    main(args + ["history"])
+    assert "empty" in capsys.readouterr().out
+    main(args + ["downgrade", "base"])
+    m = Migrator(url, "tests.models", tmp_path / "mig")
+    m.stamp("head")
+    assert m.current() is not None
+    assert len(m.history()) == 2
+    with pytest.raises(RuntimeError):
+        Migrator("sqlite+aiosqlite:///x.db").current()
+    monkeypatch.delenv("SQLFUSE_DATABASE_URL", raising=False)
+    with pytest.raises(SystemExit):
+        main(["init"])
+
+
+def test_sync_schema_refuses_not_null_without_default(tmp_path):
+    import pytest
+
+    engine = sa.create_engine(f"sqlite:///{tmp_path}/n.db")
+    meta = sa.MetaData()
+    sa.Table("things", meta, sa.Column("id", sa.Integer, primary_key=True))
+    meta.create_all(engine)
+    meta2 = sa.MetaData()
+    sa.Table("things", meta2, sa.Column("id", sa.Integer, primary_key=True),
+             sa.Column("name", sa.String(10), nullable=False))
+    with pytest.raises(RuntimeError, match="NOT NULL"):
+        sync_schema(engine, meta2)
+    engine.dispose()
+
+
+def test_async_sync_schema(tmp_path):
+    import asyncio
+
+    from sqlfuse import create_async_engine
+    from sqlfuse.migrations import async_sync_schema
+
+    async def main():
+        engine = create_async_engine(f"sqlite+aiosqlite:///{tmp_path}/as.db")
+        applied = await async_sync_schema(engine)
+        assert "CREATE TABLE hero" in applied
+        await engine.dispose()
+
+    asyncio.run(main())

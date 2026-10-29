@@ -266,5 +266,5 @@ def main(argv: list[str] | None = None) -> None:
         print("\n".join(m.history()))
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()

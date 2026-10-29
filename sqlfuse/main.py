@@ -63,7 +63,7 @@ def _class_frame_locals() -> dict | None:
     """Locals of the scope that executes the ``class`` statement (for local forward refs)."""
     frame = sys._getframe(2)
     while frame is not None and frame.f_globals.get("__name__", "").startswith(("pydantic", "sqlfuse.main")):
-        frame = frame.f_back
+        frame = frame.f_back  # pragma: no cover - only when pydantic itself defines the class
     if frame is None or frame.f_code.co_name == "<module>":
         return None
     return dict(frame.f_locals)
@@ -216,9 +216,6 @@ def _build_table_model(name: str, bases: tuple, namespace: dict, localns: dict |
     pyd_bases: list[type[BaseModel]] = []
     mixins: list[type] = []
     for base in bases:
-        if isinstance(base, type) and issubclass(base, TableModel):
-            raise TypeError(f"{name}: inheriting from table model {base.__name__} is not supported; "
-                            "inherit from a table=False base model instead")
         if isinstance(base, type) and issubclass(base, BaseModel):
             pyd_bases.append(base)
         else:
@@ -307,9 +304,9 @@ def _build_table_model(name: str, bases: tuple, namespace: dict, localns: dict |
     if "__classcell__" in namespace:
         sa_ns["__classcell__"] = namespace["__classcell__"]
 
-    cls = type(SQLBase)(name, (TableModel, *mixins, SQLBase), sa_ns)
     if name in TABLE_MODELS and TABLE_MODELS[name].__module__ != module:
         raise TypeError(f"Duplicate table model name {name!r}")
+    cls = type(SQLBase)(name, (TableModel, *mixins, SQLBase), sa_ns)
     TABLE_MODELS[name] = cls
     return cls
 
@@ -326,6 +323,15 @@ class TableModel:
     __orm_validate_assignment__: ClassVar[bool]
     __orm_pydantic_mro__: ClassVar[frozenset]
 
+    def __init_subclass__(cls, **kwargs: Any) -> None:
+        # Classes built by SQLFuseMeta carry __orm_fields__; anything else is a user
+        # subclass of a table model, which is not supported.
+        if "__orm_fields__" not in cls.__dict__:
+            base = next(b for b in cls.__mro__[1:] if issubclass(b, TableModel))
+            raise TypeError(f"{cls.__name__}: inheriting from table model {base.__name__} is not "
+                            "supported; inherit from a table=False base model instead")
+        super().__init_subclass__(**kwargs)
+
     # -- validation -----------------------------------------------------------
     def __init__(self, **data: Any) -> None:
         cls = type(self)
@@ -338,11 +344,10 @@ class TableModel:
 
         rel_values: dict[str, Any] = {}
         for rname, rel in cls.__orm_relationships__.items():
-            key = rname if rname in data else _alias_key(cls, rname, data)
-            if key is None:
+            if rname not in data:
                 continue
             try:
-                rel_values[rname] = _coerce_relationship(rel, data[key], (rname,), errors)
+                rel_values[rname] = _coerce_relationship(rel, data[rname], (rname,), errors)
             except _RelError:
                 pass
         if errors:
@@ -546,13 +551,6 @@ Mapping.register(TableModel)
 
 class _RelError(Exception):
     pass
-
-
-def _alias_key(cls: type[TableModel], rname: str, data: Mapping) -> str | None:
-    finfo = cls.__validator__.model_fields.get(rname)
-    if finfo is not None and finfo.alias and finfo.alias in data:
-        return finfo.alias
-    return None
 
 
 def _coerce_one(rel: RelInfo, value: Any, loc: tuple, errors: list[dict]) -> Any:

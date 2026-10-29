@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-24.04, windows-latest]
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
@@ -33,7 +33,7 @@ jobs:
         run: pytest -q --cov=sqlfuse --cov-report=xml
 
       - name: Coverage badge
-        if: github.ref == 'refs/heads/main' && matrix.os == 'ubuntu-latest' && matrix.python-version == '3.13'
+        if: github.ref == 'refs/heads/main' && matrix.os == 'ubuntu-24.04' && matrix.python-version == '3.13'
         run: |
           pip install "genbadge[coverage]"
           genbadge coverage -l -i coverage.xml -o coverage.svg

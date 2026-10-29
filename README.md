@@ -1,6 +1,6 @@
 <img width="1280" height="384" alt="sqlfuse-banner-wide" src="https://github.com/user-attachments/assets/664b2d96-0c17-4bd8-8138-a78cbad26690" />
 
-[![Tests](https://github.com/mtakuski/sqlfuse/actions/workflows/tests.yml/badge.svg)](https://github.com/<you>/sqlfuse/actions/workflows/tests.yml)
+[![Tests](https://github.com/mtakuski/sqlfuse/actions/workflows/tests.yml/badge.svg)](https://github.com/mtakuski/sqlfuse/actions/workflows/tests.yml)
 ![Coverage](https://raw.githubusercontent.com/mtakuski/sqlfuse/badges/coverage.svg)
 
 # SQLFuse

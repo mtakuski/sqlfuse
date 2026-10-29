@@ -24,7 +24,11 @@ Using one class for both your database table and your API schema removes a lot o
 
 ## Quickstart
 
+The point: the same table model is your FastAPI request body **and** response model.
+No separate `UserCreate`/`UserRead` schema classes, and validation is never skipped.
+
 ```python
+from fastapi import FastAPI
 from sqlfuse import SQLFuse, Field, Database, select
 
 class User(SQLFuse, table=True):
@@ -34,18 +38,34 @@ class User(SQLFuse, table=True):
 
 db = Database("sqlite:///app.db")
 db.create_all()
+app = FastAPI()
 
-with db.session() as session:
-    session.add(User(email="ada@example.com", age=28))
+@app.post("/users")
+def create_user(user: User) -> User:        # table model IS the request + response schema
+    with db.session() as session:
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+    return user
+```
 
-with db.session() as session:
-    user = session.exec(select(User)).first()
-    print(user.email, user.age)  # ada@example.com 28
+```
+POST /users {"email": "ada@example.com", "age": 28}
+-> 200 {"id": 1, "email": "ada@example.com", "age": 28}
 
+POST /users {"email": "not-an-email", "age": -5}
+-> 422 {"detail": [
+     {"loc": ["body", "email"], "msg": "String should match pattern '^[^@\\s]+@[^@\\s]+$'"},
+     {"loc": ["body", "age"],   "msg": "Input should be greater than or equal to 0"}
+   ]}
+```
+
+Validation also runs with no FastAPI involved — on plain construction, on attribute
+assignment, and recursively through nested relationships:
+
+```python
 User(email="not-an-email", age=-5)
 # pydantic.ValidationError: 2 validation errors for User
-#   email  String should match pattern '^[^@\s]+@[^@\s]+$'
-#   age    Input should be greater than or equal to 0
 ```
 
 More end-to-end examples (relationships, nested JSON, sync + async) are in [`examples/app.py`](examples/app.py).

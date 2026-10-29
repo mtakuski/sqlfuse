@@ -1,9 +1,9 @@
 # SQLFuse — Architecture
 
-SQLFuse is a SQLModel-style ORM: one class definition gives you a Pydantic-validated
-model **and** a SQLAlchemy 2.x mapped table. Unlike SQLModel, validation is *always*
-applied to `table=True` models — on construction, on attribute assignment, and
-recursively on nested relationship data.
+SQLFuse is an ORM: one class definition gives you a Pydantic-validated model **and**
+a SQLAlchemy 2.x mapped table. Validation is *always* applied to `table=True`
+models — on construction, on attribute assignment, and recursively on nested
+relationship data.
 
 ## Core idea: one declaration, two compiled artefacts
 
@@ -84,9 +84,9 @@ instance state, Pydantic owns the rules, and `__init__`/`__setattr__` bridge the
 ## Sync & async
 
 Same models for both. `Session.exec(stmt)` / `await AsyncSession.exec(stmt)`
-return scalars for single-entity selects (SQLModel ergonomics) and normal
-results otherwise. Async uses SQLAlchemy's asyncio extension; use
-`selectinload()` (re-exported) for relationships, or `Relationship(lazy="selectin")`.
+return scalars for single-entity selects and normal results otherwise. Async
+uses SQLAlchemy's asyncio extension; use `selectinload()` (re-exported) for
+relationships, or `Relationship(lazy="selectin")`.
 
 ## Databases
 

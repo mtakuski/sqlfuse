@@ -1,4 +1,4 @@
-"""Sync / async sessions with SQLModel-style ``exec()`` and a small Database facade."""
+"""Sync / async sessions with ``exec()`` returning scalars, and a small Database facade."""
 from __future__ import annotations
 
 from collections.abc import AsyncIterator, Iterator

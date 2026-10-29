@@ -1,3 +1,5 @@
+<img width="1280" height="640" alt="image" src="https://github.com/user-attachments/assets/ef815133-65f8-4b33-ae21-b4dd7d21a1d3" />
+
 # SQLFuse
 
 **A Python ORM where Pydantic validation always runs, including on database table models.**

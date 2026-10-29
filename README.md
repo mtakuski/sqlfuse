@@ -2,10 +2,10 @@
 
 [![Tests](https://github.com/mtakuski/sqlfuse/actions/workflows/tests.yml/badge.svg)](https://github.com/mtakuski/sqlfuse/actions/workflows/tests.yml)
 ![Coverage](https://raw.githubusercontent.com/mtakuski/sqlfuse/badges/coverage.svg)
+![Last commit](https://img.shields.io/github/last-commit/mtakuski/sqlfuse)
 
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![License](https://img.shields.io/github/license/mtakuski/sqlfuse)
-![Last commit](https://img.shields.io/github/last-commit/mtakuski/sqlfuse)
 ![Pydantic v2](https://img.shields.io/badge/pydantic-v2-E92063)
 	![SQLAlchemy 2](https://img.shields.io/badge/SQLAlchemy-2.x-D71F00)
 

@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sqlfuse"
+version = "0.1.0"
+description = "Python ORM with Pydantic validation that always runs, even with table=True"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [
+    { name = "Miroslaw Takuski", email = "miroslawtakuski@gmail.com" },
+]
+dependencies = [
+    "pydantic>=2.6",
+    "sqlalchemy[asyncio]>=2.0.30",
+    "alembic>=1.13",
+    "email-validator>=2",
+]
+
+[project.optional-dependencies]
+sqlite = ["aiosqlite>=0.19"]
+postgresql = ["psycopg[binary]>=3.1", "asyncpg>=0.29"]
+mysql = ["pymysql>=1.1", "aiomysql>=0.2", "cryptography>=42"]
+dev = ["pytest>=8", "aiosqlite>=0.19"]
+
+[project.scripts]
+sqlfuse-migrate = "sqlfuse.migrations:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["sqlfuse"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

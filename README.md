@@ -1,6 +1,7 @@
 <img width="1280" height="384" alt="sqlfuse-banner-wide" src="https://github.com/user-attachments/assets/664b2d96-0c17-4bd8-8138-a78cbad26690" /><br>
 
 [![Tests](https://github.com/mtakuski/sqlfuse/actions/workflows/tests.yml/badge.svg)](https://github.com/mtakuski/sqlfuse/actions/workflows/tests.yml)
+[![PyPI](https://img.shields.io/pypi/v/sqlfuse)](https://pypi.org/project/sqlfuse/)
 ![Coverage](https://raw.githubusercontent.com/mtakuski/sqlfuse/badges/coverage.svg)
 ![Last commit](https://img.shields.io/github/last-commit/mtakuski/sqlfuse)
 ![Issues](https://img.shields.io/github/issues/mtakuski/sqlfuse)

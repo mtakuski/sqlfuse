@@ -1,4 +1,4 @@
-<img width="1280" height="640" alt="image" src="https://github.com/user-attachments/assets/ef815133-65f8-4b33-ae21-b4dd7d21a1d3" />
+<img width="1280" height="384" alt="sqlfuse-banner-wide" src="https://github.com/user-attachments/assets/664b2d96-0c17-4bd8-8138-a78cbad26690" />
 
 # SQLFuse
 

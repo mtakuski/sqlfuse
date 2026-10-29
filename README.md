@@ -22,6 +22,34 @@ SQLFuse combines Pydantic v2 and SQLAlchemy 2 into a single class definition. Yo
 
 Using one class for both your database table and your API schema removes a lot of duplication. But if table models skip validation, invalid data can silently reach your database. SQLFuse keeps the single-class approach and makes validation a guarantee rather than an option.
 
+## Quickstart
+
+```python
+from sqlfuse import SQLFuse, Field, Database, select
+
+class User(SQLFuse, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    email: str = Field(pattern=r"^[^@\s]+@[^@\s]+$", unique=True)
+    age: int = Field(ge=0, le=120)
+
+db = Database("sqlite:///app.db")
+db.create_all()
+
+with db.session() as session:
+    session.add(User(email="ada@example.com", age=28))
+
+with db.session() as session:
+    user = session.exec(select(User)).first()
+    print(user.email, user.age)  # ada@example.com 28
+
+User(email="not-an-email", age=-5)
+# pydantic.ValidationError: 2 validation errors for User
+#   email  String should match pattern '^[^@\s]+@[^@\s]+$'
+#   age    Input should be greater than or equal to 0
+```
+
+More end-to-end examples (relationships, nested JSON, sync + async) are in [`examples/app.py`](examples/app.py).
+
 ## Features
 
 - **Validation that always works.** Field constraints, custom field validators and model validators run on table models, both on creation and on assignment.
@@ -50,6 +78,8 @@ SQLFuse is installed from PyPI. Optional extras install the drivers for PostgreS
 ## How it works
 
 Each table model is compiled into two parts: a SQLAlchemy mapped class that owns database state, and a hidden Pydantic model that owns the validation rules. SQLFuse connects the two, so every value that enters a table model passes through Pydantic first. Rows loaded from the database are not re-validated, which keeps loading fast and means older or legacy data never fails to load.
+
+See [`ARCHITECTURE.md`](ARCHITECTURE.md) for the full internals write-up.
 
 ## Project status
 

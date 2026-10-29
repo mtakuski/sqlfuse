@@ -60,7 +60,7 @@ POST /users {"email": "not-an-email", "age": -5}
    ]}
 ```
 
-Validation also runs with no FastAPI involved — on plain construction, on attribute
+Validation also runs with no FastAPI involved. It fires on plain construction, on attribute
 assignment, and recursively through nested relationships:
 
 ```python

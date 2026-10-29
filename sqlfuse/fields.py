@@ -37,7 +37,7 @@ class ColumnSpec:
 
 
 class OrmField:
-    """Return value of :func:`Field` — Pydantic kwargs + column options."""
+    """Return value of :func:`Field`: Pydantic kwargs plus column options."""
 
     __slots__ = ("pydantic_kwargs", "column")
 

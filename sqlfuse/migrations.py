@@ -1,7 +1,7 @@
 """Database migrations.
 
-* :class:`Migrator` — Alembic, driven programmatically (no ``alembic.ini`` required).
-* :func:`sync_schema` — dev helper: create missing tables / add missing columns, never drops.
+* :class:`Migrator`: Alembic, driven programmatically (no ``alembic.ini`` required).
+* :func:`sync_schema`: a dev helper that creates missing tables and adds missing columns, never drops.
 
 CLI::
 

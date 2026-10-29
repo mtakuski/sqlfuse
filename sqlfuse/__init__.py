@@ -1,4 +1,4 @@
-"""SQLFuse — an ORM where Pydantic validation always applies, even with table=True."""
+"""SQLFuse: an ORM where Pydantic validation always applies, even with table=True."""
 from pydantic import ValidationError, field_validator, model_validator
 from sqlalchemy import and_, delete, func, insert, not_, or_, select, text, update
 from sqlalchemy.orm import joinedload, selectinload, subqueryload

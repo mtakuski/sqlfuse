@@ -1,8 +1,8 @@
-# SQLFuse — Architecture
+# SQLFuse Architecture
 
 SQLFuse is an ORM: one class definition gives you a Pydantic-validated model **and**
 a SQLAlchemy 2.x mapped table. Validation is *always* applied to `table=True`
-models — on construction, on attribute assignment, and recursively on nested
+models. It runs on construction, on attribute assignment, and recursively on nested
 relationship data.
 
 ## Core idea: one declaration, two compiled artefacts
@@ -63,10 +63,10 @@ instance state, Pydantic owns the rules, and `__init__`/`__setattr__` bridge the
 
 ## Nested models
 
-* **Nested relations** — `Team(heroes=[{"name": "A", "powers": [{...}]}])`
+* **Nested relations**: `Team(heroes=[{"name": "A", "powers": [{...}]}])`
   builds the full object graph with validation at every level; errors carry
   the nested path (`heroes.0.powers.0.name`).
-* **Nested value objects** — a field typed with a non-table `SQLFuse`
+* **Nested value objects**: a field typed with a non-table `SQLFuse`
   (or `list[SQLFuse]`, `dict`, …) is stored in a `JSON` column via
   `PydanticJSON`, validated on input and re-hydrated into the Pydantic type on load.
 
@@ -108,5 +108,5 @@ indexes/uniques work, `JSON`, `Uuid`, `Enum`, `Numeric(max_digits, decimal_place
   `render_as_batch` for SQLite. Async URLs are converted to sync drivers for
   migrations automatically.
 * CLI: `python -m sqlfuse.migrations --url ... --models app.models revision -m "msg"`.
-* `sync_schema(engine)` — dev helper: creates missing tables and adds missing
+* `sync_schema(engine)`: a dev helper that creates missing tables and adds missing
   columns, never drops anything.
